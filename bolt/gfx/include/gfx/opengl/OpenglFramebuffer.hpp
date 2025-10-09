@@ -1,29 +1,41 @@
+// OpenglFramebuffer.hpp
 #pragma once
-
+#include "gfx/opengl/gl_defines.h" 
 namespace bolt {
 namespace gfx {
-
-/**
- * Represents an external framebuffer we can perform draw calls on, and then read the data as image
- */
 class OpenglFramebuffer {
 public:
     OpenglFramebuffer(int width, int height);
     ~OpenglFramebuffer();
-    /// Binds this framebuffer, so that all subsequent draw calls write to it
-    void use();
-    /// Binds the embedded framebuffer. This is the framebuffer used by default, but in order to revert to it this function can be called
-    static void useEmbedded();
-    int bufferSize() const { return mWidth * mHeight * 3 * sizeof(float); }
-    /// Read framebuffer pixels. Format is packed RGB
+    
+    void beginFrame();
+    void endFrame();
+    
+    void use();           // Alias for beginFrame()
+    void useEmbedded();   // Bind to screen framebuffer
     void readBuffer(void* data);
+    
+    GLuint getCurrentRenderFBO() const;
+    GLuint getDisplayFBO() const;
+    GLuint getReadFBO() const;
+    int bufferSize() const;
 
 private:
-    int mWidth;
-    int mHeight;
-    unsigned int fbo;
-    unsigned int rboColor;
-    unsigned int rboDepth;
+    static constexpr int BUFFER_COUNT = 3;
+    
+    int mWidth, mHeight;
+    // Triple buffering arrays
+    GLuint mFbos[BUFFER_COUNT];
+    GLuint mRboColors[BUFFER_COUNT];
+    GLuint mRboDepths[BUFFER_COUNT];
+    
+    // Buffer rotation indices
+    int mRenderIndex;
+    int mDisplayIndex;
+    int mReadIndex;
+    
+    void createBuffer(int index);
+    void destroyBuffer(int index);
 };
 
 } // gfx
