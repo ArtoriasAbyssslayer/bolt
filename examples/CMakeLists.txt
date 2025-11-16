@@ -32,9 +32,9 @@ set(vis_common_SRC
 )
 
 add_executable(objectVis src/objectVis.cpp ${vis_common_SRC})
-target_include_directories(objectVis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src vendored/stb)
+target_include_directories(objectVis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(objectVis PRIVATE SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx
 
 add_executable(dumpFrame src/dumpFrame.cpp ${vis_common_SRC})
-target_include_directories(dumpFrame PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src vendored/stb)
+target_include_directories(dumpFrame PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(dumpFrame PRIVATE SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx
