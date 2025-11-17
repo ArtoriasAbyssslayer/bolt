@@ -12,6 +12,7 @@ set(gfx_SRC
     src/PhongDrawable.cpp
     src/DrawableCone.cpp
     src/DrawableCuboid.cpp
+    src/DrawableCylinder.cpp
     src/DrawableSpheroid.cpp
     src/DrawableTriangle.cpp
     src/DrawableMesh.cpp

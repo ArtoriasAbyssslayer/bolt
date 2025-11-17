@@ -8,6 +8,7 @@
 #include "gfx/Axis.hpp"
 #include "gfx/DrawableCuboid.hpp"
 #include "gfx/DrawableSpheroid.hpp"
+#include "gfx/DrawableCylinder.hpp"
 #include "gfx/Color.hpp"
 #include "gfx/SceneNode.hpp"
 
@@ -43,7 +44,7 @@ int main(int argc, char** argv) {
     yAxis.setColor(COLOR_GREEN);
     zAxis.setColor(COLOR_BLUE);
 
-    auto* cube = scene.createDrawable<DrawableCuboid>(1, 1, 1);
+    auto* cube = scene.createDrawable<DrawableCylinder>(1, 1);
     cube->setMaterial(randomBrightMaterial());
     cube->setTranslation(1, 1, 4);
     cube->setRotation(DEG2RAD(40), DEG2RAD(10), DEG2RAD(50));
