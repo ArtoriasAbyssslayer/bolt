@@ -25,8 +25,18 @@ void SceneNode::setPose(const math::Vector3f& pos, const math::Vector3f& rot) {
     mWorldDirty = true;
 }
 
+void SceneNode::setRotation(const math::Quatf& q) {
+    mMtx.setRotation(q);
+    mWorldDirty = true;
+}
+
 void SceneNode::setRotation(float x, float y, float z) {
     mMtx.setRotation(x, y, z);
+    mWorldDirty = true;
+}
+
+void SceneNode::setTranslation(const math::Vector3f& v) {
+    mMtx.setTranslation(v);
     mWorldDirty = true;
 }
 

@@ -5,6 +5,34 @@
 namespace bolt {
 namespace math {
 
+void Matrix33f::setRotation(const Quatf& q) {
+    float yy = 2.0f * q.y * q.y;
+    float zz = 2.0f * q.z * q.z;
+    float xx = 2.0f * q.x * q.x;
+    float xy = 2.0f * q.x * q.y;
+    float xz = 2.0f * q.x * q.z;
+    float yz = 2.0f * q.y * q.z;
+    float wz = 2.0f * q.w * q.z;
+    float wx = 2.0f * q.w * q.x;
+    float wy = 2.0f * q.w * q.y;
+
+    data[0][0] = 1.0f - yy - zz;
+    data[0][1] = xy - wz;
+    data[0][2] = xz + wy;
+
+    data[1][0] = xy + wz;
+    data[1][1] = 1.0f - xx - zz;
+    data[1][2] = yz - wx;
+
+    data[2][0] = xz - wy;
+    data[2][1] = yz + wx;
+    data[2][2] = 1.0f - xx - yy;
+
+    data[0][3] = 0.0f;
+    data[1][3] = 0.0f;
+    data[2][3] = 0.0f;
+}
+
 void Matrix33f::setRotation(float r, float p, float y) {
     float cr = std::cos(r);
     float sr = std::sin(r);
@@ -34,6 +62,34 @@ Vector3f Matrix33f::operator*(const Vector3f& other) const {
     return ret;
 }
 
+void Matrix34f::setRotation(const Quatf& q) {
+    float yy = 2.0f * q.y * q.y;
+    float zz = 2.0f * q.z * q.z;
+    float xx = 2.0f * q.x * q.x;
+    float xy = 2.0f * q.x * q.y;
+    float xz = 2.0f * q.x * q.z;
+    float yz = 2.0f * q.y * q.z;
+    float wz = 2.0f * q.w * q.z;
+    float wx = 2.0f * q.w * q.x;
+    float wy = 2.0f * q.w * q.y;
+
+    data[0][0] = 1.0f - yy - zz;
+    data[0][1] = xy - wz;
+    data[0][2] = xz + wy;
+
+    data[1][0] = xy + wz;
+    data[1][1] = 1.0f - xx - zz;
+    data[1][2] = yz - wx;
+
+    data[2][0] = xz - wy;
+    data[2][1] = yz + wx;
+    data[2][2] = 1.0f - xx - yy;
+
+    data[0][3] = 0.0f;
+    data[1][3] = 0.0f;
+    data[2][3] = 0.0f;
+}
+
 void Matrix34f::setRotation(float r, float p, float y) {
     float cr = std::cos(r);
     float sr = std::sin(r);
@@ -61,6 +117,34 @@ Vector3f Matrix34f::operator*(const Vector3f& other) const {
     ret.y = this->data[1][0] * other.x + this->data[1][1] * other.y + this->data[1][2] * other.z + this->data[1][3];
     ret.z = this->data[2][0] * other.x + this->data[2][1] * other.y + this->data[2][2] * other.z + this->data[2][3];
     return ret;
+}
+
+void Matrix44f::setRotation(const Quatf& q) {
+    float yy = 2.0f * q.y * q.y;
+    float zz = 2.0f * q.z * q.z;
+    float xx = 2.0f * q.x * q.x;
+    float xy = 2.0f * q.x * q.y;
+    float xz = 2.0f * q.x * q.z;
+    float yz = 2.0f * q.y * q.z;
+    float wz = 2.0f * q.w * q.z;
+    float wx = 2.0f * q.w * q.x;
+    float wy = 2.0f * q.w * q.y;
+
+    data[0][0] = 1.0f - yy - zz;
+    data[0][1] = xy - wz;
+    data[0][2] = xz + wy;
+
+    data[1][0] = xy + wz;
+    data[1][1] = 1.0f - xx - zz;
+    data[1][2] = yz - wx;
+
+    data[2][0] = xz - wy;
+    data[2][1] = yz + wx;
+    data[2][2] = 1.0f - xx - yy;
+
+    data[0][3] = 0.0f;
+    data[1][3] = 0.0f;
+    data[2][3] = 0.0f;
 }
 
 void Matrix44f::setRotation(float r, float p, float y) {

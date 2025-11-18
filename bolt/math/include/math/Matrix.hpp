@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector.hpp"
+#include "Quat.hpp"
 
 namespace bolt {
 namespace math {
@@ -31,6 +32,7 @@ struct Matrix33f {
         ret(2,2) = data[2][2];
         return ret;
     }
+    void setRotation(const Quatf& q);
     void setRotation(float roll, float pitch, float yaw);
     Vector3f operator*(const Vector3f& other) const;
 };
@@ -54,6 +56,7 @@ struct Matrix34f {
         data[1][3] = y;
         data[2][3] = z;
     }
+    void setRotation(const Quatf& q);
     void setRotation(float roll, float pitch, float yaw);
     Vector3f operator*(const Vector3f& other) const;
 };
@@ -106,6 +109,7 @@ struct Matrix44f {
         data[1][3] = v.y;
         data[2][3] = v.z;
     }
+    void setRotation(const Quatf& q);
     void setRotation(float roll, float pitch, float yaw);
     void setRotation(const Matrix33f& mtx) {
         data[0][0] = mtx(0,0);

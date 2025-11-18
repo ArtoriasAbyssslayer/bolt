@@ -2,6 +2,7 @@
 
 #include "math/Matrix.hpp"
 #include "math/Vector.hpp"
+#include "math/Quat.hpp"
 
 #include <vector>
 
@@ -36,8 +37,11 @@ public:
 
     /// @beginSetters
     void setMtx(const math::Matrix34f& mtx);
+    void setMtx(const math::Matrix44f& mtx) { mMtx = mtx; mWorldDirty = true; }
     void setPose(const math::Vector3f& pos, const math::Vector3f& rot);
+    void setRotation(const math::Quatf& q);
     void setRotation(float roll, float pitch, float yaw);
+    void setTranslation(const math::Vector3f& pos);
     void setTranslation(float x, float y, float z);
     /// @endSetters
 
@@ -45,8 +49,7 @@ public:
     void addChild(SceneNode* node);
 
     // graph transactions
-    void setTransform(const bolt::math::Matrix44f& tf);
-    void updateWorldTransforms();
+    virtual void updateWorldTransforms();
 
 protected:
     SceneNode* mParent;

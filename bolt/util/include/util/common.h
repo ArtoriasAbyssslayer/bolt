@@ -55,3 +55,13 @@
 #else
 #define DEBUG(m, ...)
 #endif
+
+#define ERROR(m, ...) \
+    do { \
+        fprintf(stderr, "[" FILE_NAME ":" TOSTRING(__LINE__) "] ERROR: " m "\n", ##__VA_ARGS__); \
+    } while (0)
+
+#define INFO(m, ...) \
+    do { \
+        printf("[" FILE_NAME ":" TOSTRING(__LINE__) "] INFO: " m "\n", ##__VA_ARGS__); \
+    } while (0)

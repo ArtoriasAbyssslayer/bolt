@@ -8,6 +8,8 @@ struct Quatf {
     float y;
     float z;
     float w;
+
+    Quatf(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 };
 
 } // math
