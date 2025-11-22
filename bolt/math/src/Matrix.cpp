@@ -54,6 +54,27 @@ void Matrix33f::setRotation(float r, float p, float y) {
     data[2][2] = cp * cr;
 }
 
+void Matrix33f::setRotation(const Vector3f& axis, float angle) {
+    float c = std::cos(angle);
+    float s = std::sin(angle);
+    float C = 1-c;
+    float x = axis.x;
+    float y = axis.y;
+    float z = axis.z;
+
+    data[0][0] = c+x*x*C;
+    data[0][1] = x*y*C - z*s;
+    data[0][2] = x*z*C + y*s;
+
+    data[1][0] = x*y*C + z*s;
+    data[1][1] = c+y*y*C;
+    data[1][2] = y*z*C - x*s;
+
+    data[2][0] = x*z*C - y*s;
+    data[2][1] = y*z*C + x*s;
+    data[2][2] = c+z*z*C;
+}
+
 Vector3f Matrix33f::operator*(const Vector3f& other) const {
     Vector3f ret;
     ret.x = this->data[0][0] * other.x + this->data[0][1] * other.y + this->data[0][2] * other.z;
@@ -111,6 +132,27 @@ void Matrix34f::setRotation(float r, float p, float y) {
     data[2][2] = cp * cr;
 }
 
+void Matrix34f::setRotation(const Vector3f& axis, float angle) {
+    float c = std::cos(angle);
+    float s = std::sin(angle);
+    float C = 1-c;
+    float x = axis.x;
+    float y = axis.y;
+    float z = axis.z;
+
+    data[0][0] = c+x*x*C;
+    data[0][1] = x*y*C - z*s;
+    data[0][2] = x*z*C + y*s;
+
+    data[1][0] = x*y*C + z*s;
+    data[1][1] = c+y*y*C;
+    data[1][2] = y*z*C - x*s;
+
+    data[2][0] = x*z*C - y*s;
+    data[2][1] = y*z*C + x*s;
+    data[2][2] = c+z*z*C;
+}
+
 Vector3f Matrix34f::operator*(const Vector3f& other) const {
     Vector3f ret;
     ret.x = this->data[0][0] * other.x + this->data[0][1] * other.y + this->data[0][2] * other.z + this->data[0][3];
@@ -166,6 +208,27 @@ void Matrix44f::setRotation(float r, float p, float y) {
     data[2][0] = -sp;
     data[2][1] = cp * sr;
     data[2][2] = cp * cr;
+}
+
+void Matrix44f::setRotation(const Vector3f& axis, float angle) {
+    float c = std::cos(angle);
+    float s = std::sin(angle);
+    float C = 1-c;
+    float x = axis.x;
+    float y = axis.y;
+    float z = axis.z;
+
+    data[0][0] = c+x*x*C;
+    data[0][1] = x*y*C - z*s;
+    data[0][2] = x*z*C + y*s;
+
+    data[1][0] = x*y*C + z*s;
+    data[1][1] = c+y*y*C;
+    data[1][2] = y*z*C - x*s;
+
+    data[2][0] = x*z*C - y*s;
+    data[2][1] = y*z*C + x*s;
+    data[2][2] = c+z*z*C;
 }
 
 void Matrix44f::setPerspective(float fovy, float aspect, float zNear, float zFar) {

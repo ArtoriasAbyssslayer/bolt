@@ -92,17 +92,17 @@ struct Vector3f {
 
     float length() const { return std::sqrt(x * x + y * y + z * z); }
 
-    Vector3f normalize() {
+    void normalize() {
         float magnitude = length() + 1e-8f;
         x /= magnitude;
         y /= magnitude;
         z /= magnitude;
-        return *this;
     }
 
-    Vector3f normalize() const {
+    Vector3f normalized() const {
         Vector3f tmp = *this;
-        return tmp.normalize();
+        tmp.normalize();
+        return tmp;
     }
 };
 

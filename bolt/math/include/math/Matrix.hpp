@@ -34,6 +34,8 @@ struct Matrix33f {
     }
     void setRotation(const Quatf& q);
     void setRotation(float roll, float pitch, float yaw);
+    /// Rotation part from axis angle. Assumes normalized \p axis
+    void setRotation(const Vector3f& axis, float angle);
     Vector3f operator*(const Vector3f& other) const;
 };
 
@@ -58,6 +60,8 @@ struct Matrix34f {
     }
     void setRotation(const Quatf& q);
     void setRotation(float roll, float pitch, float yaw);
+    /// Rotation part from axis angle. Assumes normalized \p axis
+    void setRotation(const Vector3f& axis, float angle);
     Vector3f operator*(const Vector3f& other) const;
 };
 
@@ -122,6 +126,8 @@ struct Matrix44f {
         data[2][1] = mtx(2,1);
         data[2][2] = mtx(2,2);
     }
+    /// Rotation part from axis angle. Assumes normalized \p axis
+    void setRotation(const Vector3f& axis, float angle);
     void makeHomogeneous() {
         data[3][0] = 0.0;
         data[3][1] = 0.0;
