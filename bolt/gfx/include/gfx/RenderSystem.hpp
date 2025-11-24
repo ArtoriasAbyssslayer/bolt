@@ -8,6 +8,7 @@ namespace gfx {
 
 class RenderSystem {
 public:
+    virtual ~RenderSystem() {}
     virtual void setViewport(int x, int y, int width, int height) = 0;
     virtual void addDrawable(Drawable* drawable) = 0;
     virtual RenderUniformBuffer* addUniform(size_t size, uint32_t bindPoint) = 0;

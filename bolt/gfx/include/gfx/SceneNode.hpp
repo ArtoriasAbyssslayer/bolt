@@ -31,6 +31,7 @@ public:
     const math::Matrix44f& worldMtx() const { return mWorldMtx; }
     math::Vector3f worldPos() const { return mWorldMtx.getTranslation(); }
     SceneNode* child(int i) { return mChildren[i]; }
+    const SceneNode* child(int i) const { return mChildren[i]; }
     int childCount() const { return mChildren.size(); }
     Type type() const { return mType; }
     /// @endGetters
@@ -49,7 +50,10 @@ public:
     void addChild(SceneNode* node);
 
     // graph transactions
-    virtual void updateWorldTransforms();
+    virtual void updateWorldTransforms(bool parentDirty = false);
+
+private:
+    void setWorldDirty() { mWorldDirty = true; }
 
 protected:
     SceneNode* mParent;

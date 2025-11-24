@@ -10,6 +10,11 @@
 
 SDLApplication::SDLApplication(int initWidth, int initHeight) : mRunning(true) {
     // Initialize SDL
+#ifndef NDEBUG
+    // SDL lets DBus leak by default in case other systems use it. Disable this to not confuse ASan
+    bool hintSet = SDL_SetHint(SDL_HINT_SHUTDOWN_DBUS_ON_QUIT, "1");
+    RUNTIME_ASSERT(hintSet, SDL_GetError());
+#endif
     bool videoInit = SDL_InitSubSystem(SDL_INIT_VIDEO);
     RUNTIME_ASSERT(videoInit, SDL_GetError());
 
@@ -51,6 +56,7 @@ SDLApplication::SDLApplication(int initWidth, int initHeight) : mRunning(true) {
 SDLApplication::~SDLApplication() {
     SDL_GL_DestroyContext(mGlContext);
     mWindow.destroy();
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
     SDL_Quit();
 }
 

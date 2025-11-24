@@ -17,6 +17,7 @@ SceneNode::SceneNode(math::Matrix44f mtx, Type type) : mMtx(mtx), mType(type) {
 void SceneNode::addChild(SceneNode* node) {
     node->mParent = this;
     mChildren.push_back(node);
+    node->setWorldDirty();
 }
 
 void SceneNode::setPose(const math::Vector3f& pos, const math::Vector3f& rot) {
@@ -61,8 +62,9 @@ void SceneNode::setMtx(const bolt::math::Matrix34f& mtx) {
     mWorldDirty = true;
 }
 
-void SceneNode::updateWorldTransforms() {
-    if (mWorldDirty) {
+void SceneNode::updateWorldTransforms(bool parentDirty) {
+    bool wasDirty = mWorldDirty;
+    if (mWorldDirty || parentDirty) {
         if (mParent != nullptr) {
             mWorldMtx = mParent->worldMtx() * mMtx;
         } else {
@@ -73,7 +75,7 @@ void SceneNode::updateWorldTransforms() {
     }
 
     for (SceneNode* child : mChildren) {
-        child->updateWorldTransforms();
+        child->updateWorldTransforms(wasDirty || parentDirty);
     }
 }
 

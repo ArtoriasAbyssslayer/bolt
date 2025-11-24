@@ -11,6 +11,9 @@ struct FlatDrawableVertex {
     math::Vector3f pos;
 };
 
+/**
+ * Flat shaded drawable
+ */
 class FlatDrawable : public Drawable3d {
 public:
     FlatDrawable() = default;

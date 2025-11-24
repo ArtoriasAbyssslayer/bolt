@@ -7,6 +7,7 @@ namespace gfx {
 
 class RenderUniformBuffer {
 public:
+    virtual ~RenderUniformBuffer() {}
     virtual void writeData(const void* src, size_t offset, size_t size) = 0;
 };
 
