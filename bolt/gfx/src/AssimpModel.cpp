@@ -1,4 +1,6 @@
 #include "gfx/AssimpModel.hpp"
+#include "gfx/TexturedMesh.hpp"
+#include "gfx/PhongMesh.hpp"
 
 #include "util/common.h"
 #include "gfx/common.h"
@@ -16,14 +18,20 @@ AssimpModel::AssimpModel(const char* path) {
     memcpy(mPath, path, pathLength);
 }
 
-AssimpModel::~AssimpModel() { free(mPath); }
+AssimpModel::~AssimpModel() {
+    free(mPath);
+
+    for (auto* mesh : mMeshes) {
+        delete mesh;
+    }
+}
 
 void AssimpModel::load() {
     printf("%s\n", mPath);
     loadModel(mPath);
 
-    for (auto& mesh : mMeshes) {
-        addChild(&mesh);
+    for (auto* mesh : mMeshes) {
+        addChild(mesh);
     }
 }
 
@@ -43,7 +51,7 @@ void AssimpModel::processNode(aiNode *node, const aiScene *scene) {
         // the node object only contains indices to index the actual objects in the scene. 
         // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        TexturedMesh drawableMesh = processMesh(mesh, scene);
+        Drawable3d* drawableMesh = processMesh(mesh, scene);
         mMeshes.push_back(drawableMesh);
     }
 
@@ -52,14 +60,89 @@ void AssimpModel::processNode(aiNode *node, const aiScene *scene) {
     }
 }
 
-TexturedMesh AssimpModel::processMesh(aiMesh *mesh, const aiScene *scene) {
+Drawable3d* AssimpModel::processMesh(aiMesh *mesh, const aiScene *scene) {
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];    
+    // kinda crude way of figuring out how to shade the mesh. Let me know if you know a better way
+    if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0 || material->GetTextureCount(aiTextureType_AMBIENT) > 0) {
+        // textured mesh
+        return processTexturedMesh(mesh, scene);
+    } else {
+        // phong shaded mesh
+        return processPhongMesh(mesh, scene);
+    }
+}
+
+Drawable3d* AssimpModel::processPhongMesh(aiMesh *mesh, const aiScene *scene) {
+    std::vector<PhongDrawableVertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<TextureDescriptor> textures;
+
+    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
+        PhongDrawableVertex vertex;
+        math::Vector3f vector;
+        // positions
+        vector.x = mesh->mVertices[i].x;
+        vector.y = mesh->mVertices[i].y;
+        vector.z = mesh->mVertices[i].z;
+        vertex.pos = vector;
+        // normals
+        if (mesh->HasNormals())
+        {
+            vector.x = mesh->mNormals[i].x;
+            vector.y = mesh->mNormals[i].y;
+            vector.z = mesh->mNormals[i].z;
+            vertex.nrm = vector;
+        }
+
+        vertices.push_back(vertex);
+    }
+
+    for(unsigned int i = 0; i < mesh->mNumFaces; i++)
+    {
+        aiFace face = mesh->mFaces[i];
+        for(unsigned int j = 0; j < face.mNumIndices; j++)
+            indices.push_back(face.mIndices[j]);        
+    }
+
+    PhongMesh* res = new PhongMesh(vertices, indices);
+
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];    
+    aiColor3D color;
+    float shininess;
+
+    // DIFFUSE COLOR
+    if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) {
+        res->setDiffuse(math::Vector3f(color.r, color.g, color.b));
+    }
+
+    // AMBIENT COLOR
+    if (material->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) {
+        res->setAmbient(math::Vector3f(color.r, color.g, color.b));
+    } else {
+        res->setAmbient(res->diffuse() * 0.5f);
+    }
+
+    // SPECULAR COLOR
+    if (material->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS) {
+        res->setSpecular(math::Vector3f(color.r, color.g, color.b));
+    }
+
+    // SHININESS
+    if (material->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) {
+        res->setShininess(shininess);
+    }
+
+    return res;
+}
+
+Drawable3d* AssimpModel::processTexturedMesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<TexturedMeshVertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<TextureDescriptor> textures;
 
     for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
         TexturedMeshVertex vertex;
-        math::Vector3f vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+        math::Vector3f vector;
         // positions
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
@@ -130,7 +213,7 @@ TexturedMesh AssimpModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     textures.insert(textures.end(), shininessMaps.begin(), shininessMaps.end());
     
     // return a mesh object created from the extracted mesh data
-    return TexturedMesh(vertices, indices, textures);
+    return new TexturedMesh(vertices, indices, textures);
 }
 
 std::vector<TextureDescriptor> AssimpModel::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName) {
