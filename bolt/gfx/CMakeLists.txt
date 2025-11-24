@@ -15,7 +15,7 @@ set(gfx_SRC
     src/DrawableCylinder.cpp
     src/DrawableSpheroid.cpp
     src/DrawableTriangle.cpp
-    src/DrawableMesh.cpp
+    src/TexturedMesh.cpp
 
     src/Axis.cpp
 

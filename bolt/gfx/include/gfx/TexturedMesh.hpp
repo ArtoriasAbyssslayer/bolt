@@ -9,15 +9,15 @@
 namespace bolt {
 namespace gfx {
 
-struct MeshVertex {
+struct TexturedMeshVertex {
     math::Vector3f position;
     math::Vector3f normal;
     math::Vector2f texCoo;
 };
 
-class DrawableMesh : public Drawable3d {
+class TexturedMesh : public Drawable3d {
 public:
-    DrawableMesh(std::vector<MeshVertex> vertices,
+    TexturedMesh(std::vector<TexturedMeshVertex> vertices,
                            std::vector<unsigned int> indices,
                            std::vector<TextureDescriptor> textures);
 
@@ -33,7 +33,7 @@ public:
     virtual int textureCount() const override { return mTextureDesc.size(); }
 
 private:
-    std::vector<MeshVertex> mVertices;
+    std::vector<TexturedMeshVertex> mVertices;
     std::vector<unsigned int> mIndices;
     std::vector<TextureDescriptor> mTextureDesc;
 };

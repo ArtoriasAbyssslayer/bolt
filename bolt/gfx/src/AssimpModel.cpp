@@ -43,7 +43,7 @@ void AssimpModel::processNode(aiNode *node, const aiScene *scene) {
         // the node object only contains indices to index the actual objects in the scene. 
         // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        DrawableMesh drawableMesh = processMesh(mesh, scene);
+        TexturedMesh drawableMesh = processMesh(mesh, scene);
         mMeshes.push_back(drawableMesh);
     }
 
@@ -52,13 +52,13 @@ void AssimpModel::processNode(aiNode *node, const aiScene *scene) {
     }
 }
 
-DrawableMesh AssimpModel::processMesh(aiMesh *mesh, const aiScene *scene) {
-    std::vector<MeshVertex> vertices;
+TexturedMesh AssimpModel::processMesh(aiMesh *mesh, const aiScene *scene) {
+    std::vector<TexturedMeshVertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<TextureDescriptor> textures;
 
     for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        MeshVertex vertex;
+        TexturedMeshVertex vertex;
         math::Vector3f vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
         // positions
         vector.x = mesh->mVertices[i].x;
@@ -130,7 +130,7 @@ DrawableMesh AssimpModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     textures.insert(textures.end(), shininessMaps.begin(), shininessMaps.end());
     
     // return a mesh object created from the extracted mesh data
-    return DrawableMesh(vertices, indices, textures);
+    return TexturedMesh(vertices, indices, textures);
 }
 
 std::vector<TextureDescriptor> AssimpModel::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName) {
