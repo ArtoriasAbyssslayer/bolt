@@ -23,6 +23,7 @@ class OpenglRenderSystem final : public RenderSystem {
 public:
     OpenglRenderSystem();
     virtual ~OpenglRenderSystem();
+    virtual void setClearColor(float r, float b, float g, float a) override;
     virtual void setViewport(int x, int y, int width, int height) override;
     virtual void addDrawable(Drawable* drawable) override;
     virtual RenderUniformBuffer* addUniform(size_t size, uint32_t bindPoint) override;

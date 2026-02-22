@@ -2,13 +2,14 @@
 #include "util/common.h"
 
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_vulkan.h>
 
 #include "gfx/opengl/gl_defines.h"
 #include "gfx/opengl/GlUtils.hpp"
 
 #include <chrono>
 
-SDLApplication::SDLApplication(int initWidth, int initHeight) : mRunning(true) {
+SDLApplication::SDLApplication(int initWidth, int initHeight, RenderBackend renderBackend) : mRunning(true), mRenderBackend(renderBackend) {
     // Initialize SDL
 #ifndef NDEBUG
     // SDL lets DBus leak by default in case other systems use it. Disable this to not confuse ASan
@@ -18,16 +19,28 @@ SDLApplication::SDLApplication(int initWidth, int initHeight) : mRunning(true) {
     bool videoInit = SDL_InitSubSystem(SDL_INIT_VIDEO);
     RUNTIME_ASSERT(videoInit, SDL_GetError());
 
-    // Set OpenGL context attributes
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    if (renderBackend == BACKEND_OPENGL) {
+        // Set OpenGL context attributes
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #ifndef NDEBUG
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 #endif
+    }
 
-    mWindow.create(initWidth, initHeight);
+    SDLWindowOptions options;
+    options.renderBackend = renderBackend;
+    mWindow.create(initWidth, initHeight, options);
 
+    if (renderBackend == BACKEND_OPENGL) {
+        setupOpengl();
+    } else if (renderBackend == BACKEND_VULKAN) {
+        setupVulkan();
+    }
+}
+
+void SDLApplication::setupOpengl() {
     // Create OpenGL context
     mGlContext = SDL_GL_CreateContext(mWindow.getSdlWindow());
     RUNTIME_ASSERT(mGlContext, SDL_GetError());
@@ -51,6 +64,11 @@ SDLApplication::SDLApplication(int initWidth, int initHeight) : mRunning(true) {
         std::abort();
     }
 #endif
+}
+
+void SDLApplication::setupVulkan() {
+    mVulkanExtensions = SDL_Vulkan_GetInstanceExtensions(&mVulkanExtensionCount);
+    RUNTIME_ASSERT(mVulkanExtensions, SDL_GetError());
 }
 
 SDLApplication::~SDLApplication() {

@@ -40,6 +40,10 @@ struct ProgramDescriptor {
     std::string vertShader;
     /// path to fragment shader
     std::string fragShader;
+
+    bool operator==(const ProgramDescriptor& other) const {
+        return vertShader == other.vertShader && fragShader == other.fragShader;
+    }
 };
 
 struct TextureDescriptor {

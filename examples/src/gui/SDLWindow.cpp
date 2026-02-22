@@ -2,16 +2,35 @@
 
 #include "util/common.h"
 
+const SDLWindowOptions defaultWindowOptions {
+    BACKEND_OPENGL
+};
+
 SDLWindow::SDLWindow() {
 
 }
 
-void SDLWindow::create(int width, int height) {
+void SDLWindow::create(int width, int height, const SDLWindowOptions& options) {
+    SDL_WindowFlags windowFlags = SDL_WINDOW_RESIZABLE;
+    switch (options.renderBackend)
+    {
+    case BACKEND_OPENGL:
+        windowFlags |= SDL_WINDOW_OPENGL;
+        break;
+
+    case BACKEND_VULKAN:
+        windowFlags |= SDL_WINDOW_VULKAN;
+        break;
+    
+    default:
+        PANIC("Unknown render backend %d", options.renderBackend);
+        break;
+    }
     mSdlWindow = SDL_CreateWindow(
         "Object Visualizer",
         width,
         height,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+        windowFlags
     );
 
     RUNTIME_ASSERT(mSdlWindow != nullptr, SDL_GetError());

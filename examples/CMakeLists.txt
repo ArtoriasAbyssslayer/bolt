@@ -12,6 +12,7 @@ set(SDL_CAMERA OFF CACHE BOOL "" FORCE)
 set(SDL_POWER OFF CACHE BOOL "" FORCE)
 add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 add_subdirectory(vendored/ccd EXCLUDE_FROM_ALL)
+add_subdirectory(vendored/imgui EXCLUDE_FROM_ALL)
 
 set(vis_common_SRC
     src/col/ColliderConvex.cpp
@@ -31,6 +32,8 @@ set(vis_common_SRC
     src/gui/SDLApplication3d.cpp
 )
 
+add_subdirectory(src/ocrb)
+
 add_executable(objectVis src/objectVis.cpp ${vis_common_SRC})
 target_include_directories(objectVis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(objectVis PRIVATE SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx
@@ -38,3 +41,7 @@ target_link_libraries(objectVis PRIVATE SDL3::SDL3 ccd bolt::math bolt::gfx glad
 add_executable(dumpFrame src/dumpFrame.cpp ${vis_common_SRC})
 target_include_directories(dumpFrame PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(dumpFrame PRIVATE SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx
+
+add_executable(robotVis src/robotVis.cpp ${vis_common_SRC} src/gui/ImguiApplication.cpp)
+target_include_directories(robotVis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(robotVis PRIVATE imgui ocrb SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx

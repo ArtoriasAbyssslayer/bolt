@@ -1,9 +1,14 @@
 project(bolt_gfx)
 
-# Try to find system Assimp
+# find assimp (optional)
 find_package(assimp)
 
 add_subdirectory(vendored/glad)
+
+option(BOLT_GFX_ENABLE_VULKAN "Enable Vulkan backend" OFF)
+if(BOLT_GFX_ENABLE_VULKAN)
+    find_package(Vulkan REQUIRED)
+endif()
 
 set(gfx_SRC
     src/Drawable.cpp
@@ -33,6 +38,14 @@ set(gfx_SRC
     src/opengl/GlUtils.cpp
     src/opengl/gl_defines.cpp
 )
+if(BOLT_GFX_ENABLE_VULKAN)
+    list(APPEND gfx_SRC
+        src/vulkan/VulkanRenderSystem.cpp
+        src/vulkan/VulkanDrawable.cpp
+        src/vulkan/VulkanDrawList.cpp
+        src/vulkan/VulkanProgram.cpp
+    )
+endif()
 
 if(TARGET assimp::assimp)
     list(APPEND gfx_SRC src/AssimpModel.cpp)
@@ -48,13 +61,17 @@ target_include_directories(gfx
     vendored/stb
 )
 target_link_libraries(gfx PRIVATE glad PUBLIC bolt::math bolt::util)
+target_compile_definitions(gfx PRIVATE BOLT_GFX_ROOT="${PROJECT_SOURCE_DIR}")
+
+if(BOLT_GFX_ENABLE_VULKAN)
+    target_link_libraries(gfx PRIVATE Vulkan::Vulkan)
+    target_compile_definitions(gfx PRIVATE BOLT_GFX_HAVE_VULKAN)
+endif()
 
 if(TARGET assimp::assimp)
     target_compile_definitions(gfx PRIVATE HAVE_ASSIMP)
     target_link_libraries(gfx PRIVATE assimp::assimp)
 endif()
-
-target_compile_definitions(gfx PRIVATE BOLT_GFX_ROOT="${PROJECT_SOURCE_DIR}")
 
 install(TARGETS gfx glad
         EXPORT gfxTargets

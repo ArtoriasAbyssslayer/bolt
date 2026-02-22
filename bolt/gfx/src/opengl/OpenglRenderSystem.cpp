@@ -73,8 +73,12 @@ void OpenglDrawable::load() {
 }
 
 OpenglRenderSystem::OpenglRenderSystem() {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    setClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
+}
+
+void OpenglRenderSystem::setClearColor(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
 }
 
 void OpenglRenderSystem::setViewport(int x, int y, int width, int height) {

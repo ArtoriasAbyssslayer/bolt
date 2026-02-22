@@ -13,7 +13,7 @@ namespace gfx {
 
 class SceneManager {
 public:
-    SceneManager();
+    SceneManager(RenderSystem* renderSystem);
     ~SceneManager();
 
     /// @beginGetters

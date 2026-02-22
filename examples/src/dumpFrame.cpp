@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
     int initialHeight = 1000;
     SDLApplication3d application(initialWidth, initialHeight);
 
-    SceneManager& scene = application.scene();
+    SceneManager& scene = *application.scene();
     SceneNode& sceneRoot = scene.root();
 
     auto zAxis = Axis(1, 0.2, 0.08);

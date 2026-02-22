@@ -6,7 +6,7 @@
 
 class SDLApplication {
 public:
-    SDLApplication(int width, int height);
+    SDLApplication(int width, int height, RenderBackend renderBackend = BACKEND_OPENGL);
     virtual ~SDLApplication();
     virtual void run();
     void handleEvents();
@@ -14,6 +14,14 @@ public:
 
 protected:
     SDLWindow mWindow;
-    SDL_GLContext mGlContext;
+    RenderBackend mRenderBackend;
     bool mRunning;
+
+    SDL_GLContext mGlContext;
+    unsigned int mVulkanExtensionCount;
+    const char* const * mVulkanExtensions;
+
+private:
+    void setupOpengl();
+    void setupVulkan();
 };

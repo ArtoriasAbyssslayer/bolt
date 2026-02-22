@@ -1,5 +1,4 @@
 #include "gfx/SceneManager.hpp"
-#include "gfx/opengl/OpenglRenderSystem.hpp"
 
 #include "util/common.h"
 
@@ -11,9 +10,7 @@ struct CameraData {
     math::Matrix44f view;
 };
 
-SceneManager::SceneManager() : mSceneRoot(math::Matrix44f::IDENTITY) {
-    // more render systems can be supported in the future by extending RenderSystem
-    mRenderSystem = new OpenglRenderSystem;
+SceneManager::SceneManager(RenderSystem* renderSystem) : mSceneRoot(math::Matrix44f::IDENTITY), mRenderSystem(renderSystem) {
 }
 
 SceneManager::~SceneManager() {
@@ -23,7 +20,6 @@ SceneManager::~SceneManager() {
     for (Drawable3d* drawable : mDrawables) {
         delete drawable;
     }
-    delete mRenderSystem;
 }
 
 OrbitCamera* SceneManager::createOrbitCamera() {
