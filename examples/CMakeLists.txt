@@ -32,8 +32,6 @@ set(vis_common_SRC
     src/gui/SDLApplication3d.cpp
 )
 
-add_subdirectory(src/ocrb)
-
 add_executable(objectVis src/objectVis.cpp ${vis_common_SRC})
 target_include_directories(objectVis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(objectVis PRIVATE SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx

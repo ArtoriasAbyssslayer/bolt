@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(objectVis)
 
-option(BUILD_EXAMPLES "Build examples" ON)
+option(BOLT_BUILD_EXAMPLES "Build examples" ON)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    add_compile_options (-fdiagnostics-color=always)
@@ -26,6 +26,6 @@ endif()
 # Main library
 add_subdirectory(bolt)
 
-if(BUILD_EXAMPLES)
+if(BOLT_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
