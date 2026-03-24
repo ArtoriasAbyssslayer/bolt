@@ -40,6 +40,6 @@ add_executable(dumpFrame src/dumpFrame.cpp ${vis_common_SRC})
 target_include_directories(dumpFrame PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(dumpFrame PRIVATE SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx
 
-add_executable(robotVis src/robotVis.cpp ${vis_common_SRC} src/gui/ImguiApplication.cpp)
-target_include_directories(robotVis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(robotVis PRIVATE imgui ocrb SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx
+#add_executable(robotVis src/robotVis.cpp ${vis_common_SRC} src/gui/ImguiApplication.cpp)
+#target_include_directories(robotVis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+#target_link_libraries(robotVis PRIVATE imgui ocrb SDL3::SDL3 ccd bolt::math bolt::gfx glad) # glad dep from bolt::gfx

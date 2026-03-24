@@ -160,10 +160,10 @@ void OpenglRenderSystem::renderFrame() {
 
         // bind textures if they exist
         auto& textures = d.drawable->textures();
-        for (int i = 0; i < textures.size(); i++) {
+        for (size_t i = 0; i < textures.size(); i++) {
             auto* texture = static_cast<OpenglTexture*>(textures[i]);
-            glActiveTexture(GL_TEXTURE0 + i);
-            glUniform1i(texture->samplerLocation(), i);
+            glActiveTexture(GL_TEXTURE0 + static_cast<int>(i));
+            glUniform1i(texture->samplerLocation(), static_cast<int>(i));
             texture->bind();
         }
 

@@ -9,6 +9,7 @@ target_include_directories(util
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
+target_compile_options(util PRIVATE -Wall)
 
 install(TARGETS util
         EXPORT utilTargets

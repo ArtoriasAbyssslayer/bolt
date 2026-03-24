@@ -17,6 +17,7 @@ GLenum glCheckError_(const char *file, int line)
             case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+            default:                               error = "UNKNOWN_ERROR"; break;
         }
         printf("%s:%d OPENGL ERROR: %s\n", file, line, error);
     }

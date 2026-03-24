@@ -27,10 +27,6 @@ void Matrix33f::setRotation(const Quatf& q) {
     data[2][0] = xz - wy;
     data[2][1] = yz + wx;
     data[2][2] = 1.0f - xx - yy;
-
-    data[0][3] = 0.0f;
-    data[1][3] = 0.0f;
-    data[2][3] = 0.0f;
 }
 
 void Matrix33f::setRotation(float r, float p, float y) {

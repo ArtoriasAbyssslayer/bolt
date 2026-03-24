@@ -21,6 +21,8 @@ OpenglTexture::OpenglTexture(const char* textureFile, GLint samplerLocation) : m
             format = GL_RGB;
         else if (nrComponents == 4)
             format = GL_RGBA;
+        else
+            PANIC("Unsupported number of texture channels %d", nrComponents);
 
         glBindTexture(GL_TEXTURE_2D, mId);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);

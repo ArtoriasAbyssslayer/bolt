@@ -25,7 +25,7 @@ Matrix44f Camera::getView() const {
     return mWorldMtx.rigidInverse();
 }
 
-OrbitCamera::OrbitCamera() : mFocus(0, 0, 0), mPos(10, 10, 10), mFovy(DEG2RAD(45)), mAspectRatio(1) {
+OrbitCamera::OrbitCamera() : mPos(10, 10, 10), mFocus(0, 0, 0), mFovy(DEG2RAD(45)), mAspectRatio(1) {
     updatePerspectiveMat();
     mMtx.setLookAt(mPos, mFocus, Vector3f(0, 0, 1));
 }

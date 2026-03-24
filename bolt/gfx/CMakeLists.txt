@@ -62,6 +62,7 @@ target_include_directories(gfx
 )
 target_link_libraries(gfx PRIVATE glad PUBLIC bolt::math bolt::util)
 target_compile_definitions(gfx PRIVATE BOLT_GFX_ROOT="${PROJECT_SOURCE_DIR}")
+target_compile_options(gfx PRIVATE -Wall)
 
 if(BOLT_GFX_ENABLE_VULKAN)
     target_link_libraries(gfx PRIVATE Vulkan::Vulkan)
